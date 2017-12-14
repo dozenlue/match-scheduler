@@ -1,0 +1,27 @@
+import { Router } from 'express';
+
+import MetaController from './controllers/meta.controller';
+import UsersController from './controllers/users.controller';
+
+import authenticate from './middleware/authenticate';
+import accessControl from './middleware/access-control';
+import errorHandler from './middleware/error-handler';
+
+const routes = new Router();
+
+routes.get('/', MetaController.index);
+
+// Users
+routes.get('/users', UsersController.search);
+routes.post('/users', UsersController.create);
+routes.get('/users/me', authenticate, UsersController.fetch);
+routes.put('/users/me', authenticate, UsersController.update);
+routes.delete('/users/me', authenticate, UsersController.delete);
+routes.get('/users/:username', UsersController._populate, UsersController.fetch);
+
+// Admin
+routes.get('/admin', accessControl('admin'), MetaController.index);
+
+routes.use(errorHandler);
+
+export default routes;
