@@ -40,7 +40,7 @@ class LeaguesController extends BaseController {
   }
 
   // Remove a player
-  removePlayer = async (req, res, next, leagueId) => {
+  removePlayer = async (req, res, next, leagueId, playerId) => {
   }
 }
 

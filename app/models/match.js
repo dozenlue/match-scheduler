@@ -7,7 +7,7 @@ const MatchSchema = new Schema({
   result: { type: String },
   league: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'League',
     required: true,
   },
   players: {[

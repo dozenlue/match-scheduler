@@ -4,7 +4,7 @@ import MatchModel from '../models/match';
 
 class MatchesController extends BaseController {
   // List all matches in a league
-  listAll = async (req, res, next, leagueId) => {
+  listLeagueMatches = async (req, res, next, leagueId) => {
     try {
       res.json(await MatchModel.find());
     } catch(err) {
