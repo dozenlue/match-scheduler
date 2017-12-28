@@ -5,7 +5,11 @@ import methodOverride from 'method-override';
 import morgan from 'morgan';
 import helmet from 'helmet';
 
-import routes from './routes';
+import MetaController from './controllers/meta.controller';
+import UsersController from './controllers/users.controller';
+import LeaguesController from './controllers/leagues.controller';
+import MatchesController from './controllers/matches.controller';
+
 import Constants from './constants';
 
 const app = express();
@@ -37,7 +41,22 @@ app.use(methodOverride());
 app.use('/public', express.static(`${__dirname}/public`));
 
 // Mount API routes
-app.use(Constants.apiPrefix, routes);
+app.get('/', MetaController.index);
+
+// Leagues/Matches
+app.get('/leagues', LeaguesController.list);
+app.post('/leagues', LeaguesController.create);
+app.get('/leagues/:leagueId', LeaguesController.get);
+app.put('/leagues/:leagueId', LeaguesController.update);
+app.get('/leagues/:leagueId/registeredPlayers', LeaguesController.listRegisteredPlayers);
+app.post('/leagues/:leagueId/registeredPlayers', LeaguesController.registerPlayer);
+app.get('/leagues/:leagueId/players', LeaguesController.listPlayers);
+app.post('/leagues/:leagueId/players', LeaguesController.addPlayer);
+app.delete('/leagues/:leagueId/players/:playerId', LeaguesController.removePlayer);
+
+app.get('/leagues/:leagueId/matches', MatchesController.listLeagueMatches);
+app.get('/leagues/:leagueId/matches/:matchId', MatchesController.get);
+app.put('/leagues/:leagueId/matches/:matchId', MatchesController.update);
 
 app.listen(Constants.port, () => {
   // eslint-disable-next-line no-console

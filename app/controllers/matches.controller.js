@@ -21,4 +21,4 @@ class MatchesController extends BaseController {
   }
 }
 
-export default new LeaguesController();
+export default new MatchesController();

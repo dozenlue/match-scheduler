@@ -10,11 +10,11 @@ const MatchSchema = new Schema({
     ref: 'League',
     required: true,
   },
-  players: {[
+  players: [{
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-  ]},
+  }],
   winner: {
     type: Schema.Types.ObjectId,
     ref: 'User',

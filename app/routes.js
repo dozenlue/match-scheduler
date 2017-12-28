@@ -24,17 +24,17 @@ routes.get('/users/:username', UsersController._populate, UsersController.fetch)
 // Leagues/Matches
 routes.get('/leagues', LeaguesController.list);
 routes.post('/leagues', LeaguesController.create);
-routes.get('leagues/:leagueId', LeaguesController.get);
-routes.put('leagues/:leagueId', LeaguesController.update);
-routes.get('leagues/:leagueId/registeredPlayers', LeaguesController.listRegisteredPlayers);
-routes.post('leagues/:leagueId/registeredPlayers', LeaguesController.registerPlayer);
-routes.get('leagues/:leagueId/players', LeaguesController.listPlayers);
-routes.post('leagues/:leagueId/players', LeaguesController.addPlayer);
-routes.delete('leagues/:leagueId/players/:playerId', LeaguesController.removePlayer);
+routes.get('/leagues/:leagueId', LeaguesController.get);
+routes.put('/leagues/:leagueId', LeaguesController.update);
+routes.get('/leagues/:leagueId/registeredPlayers', LeaguesController.listRegisteredPlayers);
+routes.post('/leagues/:leagueId/registeredPlayers', LeaguesController.registerPlayer);
+routes.get('/leagues/:leagueId/players', LeaguesController.listPlayers);
+routes.post('/leagues/:leagueId/players', LeaguesController.addPlayer);
+routes.delete('/leagues/:leagueId/players/:playerId', LeaguesController.removePlayer);
 
-routes.get('leagues/:leagueId/matches', MatchesController.listLeagueMatches);
-routes.get('leagues/:leagueId/matches/:matchId', MatchesController.get);
-routes.put('leagues/:leagueId/matches/:matchId', MatchesController.update);
+routes.get('/leagues/:leagueId/matches', MatchesController.listLeagueMatches);
+routes.get('/leagues/:leagueId/matches/:matchId', MatchesController.get);
+routes.put('/leagues/:leagueId/matches/:matchId', MatchesController.update);
 
 // Admin
 routes.get('/admin', accessControl('admin'), MetaController.index);
