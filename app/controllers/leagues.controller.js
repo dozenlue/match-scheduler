@@ -44,19 +44,66 @@ class LeaguesController extends BaseController {
   }
 
   // User register
-  registerPlayer = async (req, res, next, leagueId) => {
+  registerPlayer = async (req, res, next) => {
+    const leagueId = req.params.leagueId;
+    const playerId = req.body.playerId;
+    console.log("Adding Registered Player: " + playerId);
+
+    try {
+      player = await UserModel.findById(playedId);
+      if (player) {
+        league = await LeagueModel.findById(leagueId);
+        league.registeredPlayers.push(player);
+        res.json(await league.save());
+      } else {
+        res.status(400).end();
+      }
+    } catch(err) {
+      next(err);
+    }
   }
 
   // List all registered players
-  listRegisteredPlayers = async (req, res, next, leagueId) => {
+  listRegisteredPlayers = async (req, res, next) => {
+    const leagueId = req.params.leagueId;
+    console.log("Getting Registered Players with League id: " + leagueId);
+    try {
+      league = await LeagueModel.findById(leagueId);
+      res.json(league.registeredPlayers);
+    } catch(err) {
+      next(err);
+    }
   }
 
   // Add a player to take part in a league
-  addPlayer = async (req, res, next, leagueId) => {
+  addPlayer = async (req, res, next) => {
+    const leagueId = req.params.leagueId;
+    const playerId = req.body.playerId;
+    console.log("Adding Player to league: " + playerId);
+
+    try {
+      league = await LeagueModel.findById(leagueId);
+      if ( 0 <= league.registeredPlayers.indexOf(playerId)) {
+        league.players.push(player);
+        res.json(await league.save());
+      } else {
+        res.status(400).end();
+      }
+    } catch(err) {
+      next(err);
+    }
   }
 
   // List all players
-  listPlayers = async (req, res, next, leagueId) => {
+  listPlayers = async (req, res, next) => {
+    const leagueId = req.params.leagueId;
+    console.log("Getting Players with League id: " + leagueId);
+    try {
+      league = await LeagueModel.findById(leagueId);
+      res.json(league.players);
+    } catch(err) {
+      next(err);
+    }
   }
 
   // Remove a player

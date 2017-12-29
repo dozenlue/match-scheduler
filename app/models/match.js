@@ -24,6 +24,12 @@ const MatchSchema = new Schema({
   matchLink: { type: String },
 });
 
+MatchSchema.statics = {
+  findByLeagueId(leagueId) {
+    return this.find({'league': leagueId});
+  }
+};
+
 const MatchModel = mongoose.model('Match', MatchSchema);
 
 export default MatchModel;

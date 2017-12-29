@@ -43,7 +43,16 @@ app.use('/public', express.static(`${__dirname}/public`));
 // Mount API routes
 app.get('/', MetaController.index);
 
-// Leagues/Matches
+// Users API
+app.get('/users', UsersController.searchUser);
+app.get('/users/:userId', UsersController.get);
+app.put('/users/:userId', UsersController.update);
+
+// Authenticate API
+app.get('/auth/login', UsersController.login);
+app.get('/auth/whoami', UsersController.whoami);
+
+// Leagues/Matches API
 app.get('/leagues', LeaguesController.list);
 app.post('/leagues', LeaguesController.create);
 app.get('/leagues/:leagueId', LeaguesController.get);
