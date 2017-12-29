@@ -2,6 +2,36 @@ import BaseController from './base.controller';
 import LeagueModel from '../models/league';
 
 class LeaguesController extends BaseController {
+  _startLeague = async (league) => {
+    if (league.status == 'accepting' && league.players.length > 0) {
+      leagueMatches = await league.scheduleMatches();
+      if (leagueMatches && leagueMatches.length > 0) {
+        league.status = 'ongoing';
+        await league.save()
+      }
+    }
+
+    return league;
+  }
+
+  _stopLeague = async (league) => {
+    if (league.status == 'ongoing') {
+      league.status = 'stopped';
+      await league.save();
+    }
+
+    return league;
+  }
+
+  _editLeague = async (league, newLeague) => {
+    if (newLeague.name) {
+      league.name = newLeague.name;
+    }
+
+    await league.save();
+    return league;
+  }
+
   // List all leagues
   list = async (req, res, next) => {
     console.log("Listing all leagues");
@@ -40,7 +70,29 @@ class LeaguesController extends BaseController {
   }
 
   // Update or start/stop a league
-  update = async (req, res, next, leagueId) => {
+  update = async (req, res, next) => {
+    const leagueId = req.params.leagueId;
+    const action = req.query.action;
+    if (!action) {
+      action = "edit";
+    }
+
+    try {
+      league = await LeagueModel.findById(leagueId);
+      if (!league) {
+        res.status(400).end();
+      } else {
+        if (action == "start") {
+          res.json(await this._startLeague(league));
+        } else if (action == "stop") {
+          res.json(await this._stopLeague(league));
+        } else {
+          res.json(await this._editLeague(league, req.body));
+        }
+      }
+    } catch (err) {
+      next(err);
+    }
   }
 
   // User register
