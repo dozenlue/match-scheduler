@@ -10,6 +10,8 @@ import UsersController from './controllers/users.controller';
 import LeaguesController from './controllers/leagues.controller';
 import MatchesController from './controllers/matches.controller';
 
+import Auth from './middleware/authenticate';
+
 import Constants from './constants';
 
 const app = express();
@@ -50,22 +52,22 @@ app.put('/users/:userId', UsersController.update);
 
 // Authenticate API
 app.get('/auth/login', UsersController.login);
-app.get('/auth/whoami', UsersController.whoami);
+app.get('/auth/whoami', Auth, UsersController.whoami);
 
 // Leagues/Matches API
 app.get('/leagues', LeaguesController.list);
-app.post('/leagues', LeaguesController.create);
+app.post('/leagues', Auth, LeaguesController.create);
 app.get('/leagues/:leagueId', LeaguesController.get);
-app.put('/leagues/:leagueId', LeaguesController.update);
+app.put('/leagues/:leagueId', Auth, LeaguesController.update);
 app.get('/leagues/:leagueId/registeredPlayers', LeaguesController.listRegisteredPlayers);
-app.post('/leagues/:leagueId/registeredPlayers', LeaguesController.registerPlayer);
+app.post('/leagues/:leagueId/registeredPlayers', Auth, LeaguesController.registerPlayer);
 app.get('/leagues/:leagueId/players', LeaguesController.listPlayers);
-app.post('/leagues/:leagueId/players', LeaguesController.addPlayer);
-app.delete('/leagues/:leagueId/players/:playerId', LeaguesController.removePlayer);
+app.post('/leagues/:leagueId/players', Auth, LeaguesController.addPlayer);
+app.delete('/leagues/:leagueId/players/:playerId', Auth, LeaguesController.removePlayer);
 
 app.get('/leagues/:leagueId/matches', MatchesController.listLeagueMatches);
 app.get('/leagues/:leagueId/matches/:matchId', MatchesController.get);
-app.put('/leagues/:leagueId/matches/:matchId', MatchesController.update);
+app.put('/leagues/:leagueId/matches/:matchId', Auth, MatchesController.update);
 
 app.listen(Constants.port, () => {
   // eslint-disable-next-line no-console

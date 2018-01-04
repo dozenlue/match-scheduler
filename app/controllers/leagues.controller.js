@@ -72,10 +72,7 @@ class LeaguesController extends BaseController {
   // Update or start/stop a league
   update = async (req, res, next) => {
     const leagueId = req.params.leagueId;
-    const action = req.query.action;
-    if (!action) {
-      action = "edit";
-    }
+    const action = req.query.action || 'edit';
 
     try {
       league = await LeagueModel.findById(leagueId);
@@ -95,20 +92,22 @@ class LeaguesController extends BaseController {
     }
   }
 
-  // User register
+  // User register. Add request user into 'registered' list
   registerPlayer = async (req, res, next) => {
     const leagueId = req.params.leagueId;
-    const playerId = req.body.playerId;
-    console.log("Adding Registered Player: " + playerId);
+    console.log("Adding Registered Player to league: " + leagueId);
 
     try {
-      player = await UserModel.findById(playedId);
-      if (player) {
-        league = await LeagueModel.findById(leagueId);
-        league.registeredPlayers.push(player);
-        res.json(await league.save());
+      if (req.user && req.user.role != 'anonymous') {
+        var league = await LeagueModel.findById(leagueId);
+        if (!league) {
+          res.status(400).end();
+        } else {
+          league.registeredPlayers.push(req.user._id);
+          res.json(await league.save());
+        }
       } else {
-        res.status(400).end();
+        res.status(403).end();
       }
     } catch(err) {
       next(err);
@@ -120,8 +119,12 @@ class LeaguesController extends BaseController {
     const leagueId = req.params.leagueId;
     console.log("Getting Registered Players with League id: " + leagueId);
     try {
-      league = await LeagueModel.findById(leagueId);
-      res.json(league.registeredPlayers);
+      var league = await LeagueModel.findById(leagueId);
+      if (league) {
+        res.json(league.registeredPlayers);
+      } else {
+        res.status(400).end();
+      }
     } catch(err) {
       next(err);
     }
@@ -136,7 +139,7 @@ class LeaguesController extends BaseController {
     try {
       league = await LeagueModel.findById(leagueId);
       if ( 0 <= league.registeredPlayers.indexOf(playerId)) {
-        league.players.push(player);
+        league.players.push(playerId);
         res.json(await league.save());
       } else {
         res.status(400).end();

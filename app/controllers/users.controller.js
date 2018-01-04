@@ -4,14 +4,15 @@ import User from '../models/user';
 class UsersController extends BaseController {
   searchUser = async (req, res, next) => {
     const q = req.query.q;
-    if (!q) {
-      res.status(400).json({'message': 'Bad request'});
-    } else {
-      try {
+
+    try {
+      if (!q) {
+        res.json(await User.find());
+      } else {
         res.json(await User.find({'name': q}));
-      } catch(err) {
-        next(err);
       }
+    } catch(err) {
+      next(err);
     }
   }
 
