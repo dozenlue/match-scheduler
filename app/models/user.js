@@ -6,6 +6,19 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
     required: [true, 'Openid is mandatory.'],
+    validate: {
+      isAsync: true,
+      validator: function(openid, respond) {
+        UserModel.findOne({ openid })
+          .then((user) => {
+            respond(user ? false : true, "User already registered.");
+          })
+          .catch(() => {
+            respond(false, "Error occurs while checking if user already registered.");
+          });
+      },
+      message: "User already registered."
+    }
   },
   name: {
     type: String,
@@ -25,19 +38,6 @@ const UserSchema = new Schema({
   location: { type: String },
   imageUrl: { type: String },
 });
-
-// Validate openid is not taken
-UserSchema
-  .path('openId')
-  .validate((openid, respond) => {
-    UserModel.findOne({ openid })
-      .then((user) => {
-        respond(user ? false : true);
-      })
-      .catch(() => {
-        respond(false);
-      });
-  }, 'User already registered.');
 
 /**
  * User Methods

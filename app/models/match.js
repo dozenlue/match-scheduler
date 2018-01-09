@@ -27,6 +27,10 @@ const MatchSchema = new Schema({
 MatchSchema.statics = {
   findByLeagueId(leagueId) {
     return this.find({'league': leagueId});
+  },
+
+  findByPlayerIdAndLeagueId(playerId, leagueId) {
+    return this.find({'league': leagueId, 'players': [playerId]});
   }
 };
 

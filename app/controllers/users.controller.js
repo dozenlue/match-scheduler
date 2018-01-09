@@ -36,8 +36,7 @@ class UsersController extends BaseController {
   }
 
   whoami = async (req, res, next) => {
-    // TODO: check login
-    res.json(User.anonymousUser());
+    res.json(req.user);
   }
 }
 

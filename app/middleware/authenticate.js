@@ -8,15 +8,19 @@ export default async function  authenticate(req, res, next) {
 
     try {
       var user = await User.getByOpenId(openId);
+      console.log("Look for user name by openId: " + openId);
       if (!user) {
         user = new User({
           openId: openId,
           name: userName
         });
 
+        console.log("User not found, create a new one with id: " + user._id);
+
         await user.save();
-        req.user = user;
       }
+
+      req.user = user;
     } catch(err) {
       next(err);
     }
